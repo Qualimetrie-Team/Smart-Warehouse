@@ -189,14 +189,14 @@ sonar.javascript.lcov.reportPaths=coverage/lcov.info
 
 Le pipeline est bloqué automatiquement si :
 
-- ❌ Complexité cyclomatique > 10
-- ❌ Couverture de tests < 70%
-- ❌ Échec des tests
-- ❌ Échec du Quality Gate Sonar
+- Complexité cyclomatique > 10
+- Couverture de tests < 70%
+- Échec des tests
+- Échec du Quality Gate Sonar
 
 ---
 
-# 📂 Structure du projet
+# Structure du projet
 
 ```text
 smart-warehouse/
@@ -220,9 +220,9 @@ smart-warehouse/
 
 ---
 
-# 📈 Cycle PDCA du projet
+# Cycle PDCA du projet
 
-## 🟢 1. PLAN — Initialisation (Membre B)
+## 1. PLAN — Initialisation (Membre B)
 
 Création d’un code volontairement complexe :
 
@@ -253,7 +253,7 @@ function processOrder(stock, isPaid, isPriority) {
 
 ---
 
-## 🟡 2. DO — Audit Qualité (Membre A)
+## 2. DO — Audit Qualité (Membre A)
 
 Mise en place des outils :
 
@@ -278,7 +278,7 @@ Mise en place des outils :
 
 ---
 
-## 🔵 3. CHECK — Gardien Qualité (Membre A)
+## 3. CHECK — Gardien Qualité (Membre A)
 
 Création du pipeline CI/CD :
 
@@ -324,7 +324,7 @@ jobs:
 
 ---
 
-## 🟣 4. ACT — Refactoring (Membre C)
+## 4. ACT — Refactoring (Membre C)
 
 Amélioration du code :
 
@@ -361,17 +361,17 @@ Objectif atteint :
 
 ---
 
-# 📊 Analyse GQM (Goal - Question - Metric)
+# Analyse GQM (Goal - Question - Metric)
 
-## 🎯 Goal (Objectif)
+## Goal (Objectif)
 
 Réduire la dette technique et améliorer la maintenabilité de l’API Smart Warehouse.
 
-## ❓ Question
+## Question
 
 Comment le refactoring et les tests unitaires ont-ils amélioré la qualité du code ?
 
-## 📏 Metrics
+## Metrics
 
 | Critère | Avant | Après |
 |---|---|---|
@@ -382,7 +382,7 @@ Comment le refactoring et les tests unitaires ont-ils amélioré la qualité du 
 
 ---
 
-# 🧰 Technologies utilisées
+# Technologies utilisées
 
 | Technologie | Utilisation |
 |---|---|
@@ -395,18 +395,18 @@ Comment le refactoring et les tests unitaires ont-ils amélioré la qualité du 
 
 ---
 
-# ✅ Résultats obtenus
+# Résultats obtenus
 
-- ✔️ Pipeline CI/CD fonctionnel
-- ✔️ Détection automatique des anomalies
-- ✔️ Réduction de la dette technique
-- ✔️ Amélioration de la maintenabilité
-- ✔️ Tests automatisés
-- ✔️ Qualité logicielle mesurable
+- Pipeline CI/CD fonctionnel
+- Détection automatique des anomalies
+- Réduction de la dette technique
+- Amélioration de la maintenabilité
+- Tests automatisés
+- Qualité logicielle mesurable
 
 ---
 
-# 📚 Conclusion
+# Conclusion
 
 Le projet **Smart Warehouse** démontre l’importance de la qualimétrie dans le développement logiciel moderne.
 
@@ -419,7 +419,7 @@ Grâce à l’intégration des outils CI/CD, des tests automatisés et de l’an
 
 ---
 
-# 👨‍🏫 Projet académique
+# Projet
 
 Projet réalisé dans le cadre du :
 
