@@ -155,7 +155,6 @@ describe('Statut CRITIQUE', () => {
   });
 
 });
-
 ```
 ### Lancement du test
 
@@ -185,7 +184,7 @@ sonar.javascript.lcov.reportPaths=coverage/lcov.info
 
 ---
 
-## 🚦 4. Quality Gate
+## 4. Quality Gate
 
 Le pipeline est bloqué automatiquement si :
 

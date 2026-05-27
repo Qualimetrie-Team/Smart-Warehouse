@@ -1,10 +1,10 @@
-const { calculateStockAlert } = require('../src/stockAlert');
+const { checkStock } = require('../src/warehouse');
 
 // Règle 1 : stock sous le seuil → "À COMMANDER"
 describe('Statut À COMMANDER', () => {
 
   test('stock sous le seuil → statut À COMMANDER', () => {
-    const result = calculateStockAlert({
+    const result = checkStock({
       stock: 5,
       seuil: 20,
       produit: { nom: 'Vis', type: 'Normal' },
@@ -15,7 +15,7 @@ describe('Statut À COMMANDER', () => {
   });
 
   test('stock au dessus du seuil → statut OK', () => {
-    const result = calculateStockAlert({
+    const result = checkStock({
       stock: 50,
       seuil: 20,
       produit: { nom: 'Vis', type: 'Normal' },
@@ -31,7 +31,7 @@ describe('Statut À COMMANDER', () => {
 describe('Statut CRITIQUE', () => {
 
   test('stock exactement à 0 → statut CRITIQUE', () => {
-    const result = calculateStockAlert({
+    const result = checkStock({
       stock: 0,
       seuil: 20,
       produit: { nom: 'Vis', type: 'Normal' },
@@ -47,7 +47,7 @@ describe('Statut CRITIQUE', () => {
 describe('Produit Perissable', () => {
 
   test('produit perissable double le seuil', () => {
-    const result = calculateStockAlert({
+    const result = checkStock({
       stock: 25,
       seuil: 20,
       produit: { nom: 'Lait', type: 'Périssable' },
@@ -60,7 +60,7 @@ describe('Produit Perissable', () => {
   });
 
   test('produit perissable stock OK après doublement du seuil', () => {
-    const result = calculateStockAlert({
+    const result = checkStock({
       stock: 50,
       seuil: 20,
       produit: { nom: 'Lait', type: 'Périssable' },
@@ -77,7 +77,7 @@ describe('Produit Perissable', () => {
 describe('Délai fournisseur', () => {
 
   test('fournisseur Local → délai 2 jours', () => {
-    const result = calculateStockAlert({
+    const result = checkStock({
       stock: 0,
       seuil: 20,
       produit: { nom: 'Vis', type: 'Normal' },
@@ -88,7 +88,7 @@ describe('Délai fournisseur', () => {
   });
 
   test('fournisseur Etranger → délai 15 jours', () => {
-    const result = calculateStockAlert({
+    const result = checkStock({
       stock: 0,
       seuil: 20,
       produit: { nom: 'Vis', type: 'Normal' },
@@ -104,7 +104,7 @@ describe('Délai fournisseur', () => {
 describe('Période Noël', () => {
 
   test('periode Noël augmente la quantite de 30%', () => {
-    const result = calculateStockAlert({
+    const result = checkStock({
       stock: 5,
       seuil: 20,
       produit: { nom: 'Jouet', type: 'Normal' },
@@ -116,7 +116,7 @@ describe('Période Noël', () => {
   });
 
   test('periode normale → pas de majoration', () => {
-    const result = calculateStockAlert({
+    const result = checkStock({
       stock: 5,
       seuil: 20,
       produit: { nom: 'Jouet', type: 'Normal' },
@@ -133,7 +133,7 @@ describe('Période Noël', () => {
 describe('Combinaisons de règles', () => {
 
   test('perissable + stock 0 + Noël + Local', () => {
-    const result = calculateStockAlert({
+    const result = checkStock({
       stock: 0,
       seuil: 20,
       produit: { nom: 'Dinde', type: 'Périssable' },
