@@ -1,6 +1,6 @@
-# 📦 Smart Warehouse - Projet de Qualimétrie (Sujet 10)
+# Smart Warehouse - Projet Qualimétrie (Sujet 10)
 
-## 📖 Présentation du projet
+## Présentation du projet
 
 Ce projet est une démonstration de l’intégration de la **Qualimétrie Logicielle** dans un cycle de développement moderne avec **CI/CD**.
 
@@ -10,31 +10,31 @@ Projet réalisé dans le cadre du **TP de Qualimétrie Logicielle**.
 
 ---
 
-# 👥 Équipe de développement
+# Équipe de développement
 
 | Membre | Rôle |
 |---|---|
-| 👨‍💻 Membre A | Ingénieur DevOps | Sedera |
-| 🧑‍💻 Membre B | Développeur Principal | Rojo |
-| 🧪 Membre C | Spécialiste Tests & Qualité | Holisoa |
+| Membre A | Ingénieur DevOps | Sedera |
+| Membre B | Développeur Principal | Rojo |
+| Membre C | Spécialiste Tests & Qualité | Holisoa |
 
 ---
 
-# 🚀 Guide d'installation
+# Guide d'installation
 
-## 📥 1. Cloner le projet
+## 1. Cloner le projet
 
 ```bash
 git clone <https://github.com/RojoIrina/Projet-Qualimetrie-Smart-Warehouse.git>
 ```
 
-## 📦 2. Installer les dépendances
+## 2. Installer les dépendances
 
 ```bash
 npm install
 ```
 
-## ▶️ 3. Lancer le serveur
+## 3. Lancer le serveur
 
 ```bash
 node index.js
@@ -44,13 +44,13 @@ Le serveur démarre localement sur le port configuré dans le projet.
 
 ---
 
-## 🔄 Avant de commencer à travailler
+## Avant de commencer à travailler
 
 ```bash
 git pull origin main
 ```
 
-## 💾 Après les modifications
+## Après les modifications
 
 ```bash
 git add .
@@ -59,7 +59,7 @@ git push origin main
 ```
 
 
-# 🛠 Structure du Pipeline CI/CD
+# Structure du Pipeline CI/CD
 
 Le pipeline est automatisé avec **GitHub Actions**.
 
@@ -71,47 +71,101 @@ Fichier principal :
 
 À chaque `push`, le pipeline exécute automatiquement :
 
-## ✅ 1. Linter (ESLint)
+## 1. Linter (ESLint)
 
+C’est un outil qui permet d’analyser le code et d’identifier les erreurs et les points d’amélioration :
 - Vérification des bonnes pratiques
 - Contrôle de la complexité cyclomatique
 - Détection du code problématique
 
-### Exemple de configuration ESLint
+### Installation
 
-```json
-{
-  "rules": {
-    "complexity": ["error", 10]
+```bash
+npm install --save-dev eslint
+```
+
+### Initialisation et configuration
+
+```bash
+npx eslint --init
+```
+
+Cette commande sert à configurer automatiquement ESLint et de créer le fichier eslint.config.mjs
+
+#### Exemple de configuration Eslint
+
+```eslint.config.mjs
+import js from "@eslint/js";
+
+export default [
+  js.configs.recommended,
+  {
+    rules: {
+      "no-var": "error"
+    }
   }
-}
+];
 ```
 
 ---
 
-## 🧪 2. Tests Unitaires (Jest)
+## 2. Tests Unitaires (Jest)
 
+Jest est un framework de test JavaScript qui sert à trois choses précises :
 - Vérification des fonctionnalités métier
-- Validation des cas critiques
-- Génération du rapport de couverture
+- Génération du rapport de couverture (coverage/lcov.info) que SonarCloud lit pour afficher le pourcentage
+- Bloquer le pipeline si un test échoue ou si la couverture est sous 70%
 
-### Exemple de test Jest
+### Installation
+
+```bash
+npm install --save-dev jest
+```
+
+### Fichier de configuration : jest.config.js
+
+```javascript
+module.exports = {
+  testEnvironment: 'node',
+  collectCoverageFrom: [
+    'src/**/*.js',
+    'routes/**/*.js'
+  ],
+  coverageReporters: ['lcov', 'text', 'clover'],
+  coverageDirectory: 'coverage'
+};
+```
+
+### Exemple de test Jest dans le fichiers /test/warehouse.test.js
 
 ```javascript
 const { checkStock } = require('../src/warehouse');
 
-test('Retourne disponible si stock > 0', () => {
-  expect(checkStock(5)).toBe('Disponible');
+describe('Statut CRITIQUE', () => {
+
+  test('Retourne rupture si stock = 0', () => {
+    const result = checkStock({
+      stock: 0,
+      seuil: 20,
+      produit: { nom: 'Vis', type: 'Normal' },
+      fournisseur: 'Etranger',
+      periode: 'Normal'
+    });
+    expect(result.status).toBe('CRITIQUE');
+  });
+
 });
 
-test('Retourne rupture si stock = 0', () => {
-  expect(checkStock(0)).toBe('Rupture');
-});
+```
+### Lancement du test
+
+```bash
+npm test
 ```
 
 ---
 
-## 📊 3. Analyse SonarCloud
+## 3. Analyse SonarCloud
 
 - Dette technique
 - Bugs potentiels
