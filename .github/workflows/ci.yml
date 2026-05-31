@@ -28,7 +28,7 @@ jobs:
         run: npx eslint .
 
       - name: Run tests
-        run: npm test -- --coverage
+        run: npm test -- --coverage --coverageReporters=lcov text
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master

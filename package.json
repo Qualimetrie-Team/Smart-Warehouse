@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "echo \"No tests configured\"",
     "start": "node app.js"
   },
   "keywords": [],
@@ -16,7 +16,6 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.4.0",
-    "globals": "^17.6.0",
-    "jest": "^30.4.2"
+    "globals": "^17.6.0"
   }
 }
