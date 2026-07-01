@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"No tests configured\"",
-    "start": "node app.js"
+     "test": "jest --coverage",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,8 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.4.0",
-    "globals": "^17.6.0"
+    "globals": "^17.6.0",
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2"
   }
 }
