@@ -1,50 +1,10 @@
 const request = require('supertest');
-const express = require('express');
-
-const app = express();
-app.use(express.json());
+const { app } = require('../index');
 
 app.post('/api/stock-alert', (req, res) => {
-  const { stock, isPerishable, isLocal, period, threshold } = req.body;
-
-  let status = "OK";
-  let delay = 15;
-  let orderQuantity = 0;
-
-  if (stock <= threshold) {
-    if (isPerishable) {
-      if (stock <= (threshold * 2)) {
-        status = "À COMMANDER";
-        if (isLocal) {
-          delay = 2;
-          orderQuantity = 10;
-        } else {
-          delay = 15;
-          orderQuantity = 5;
-        }
-      }
-    } else {
-      status = "À COMMANDER";
-      if (isLocal) {
-        delay = 2;
-        orderQuantity = 20;
-      } else {
-        delay = 15;
-        orderQuantity = 10;
-      }
-    }
-  } else {
-    if (stock === 0) {
-      status = "CRITIQUE";
-      orderQuantity = 50;
-    }
-  }
-
-  if (period === "Noel") {
-    orderQuantity = orderQuantity * 1.30;
-  }
-
-  res.json({ status, delay, orderQuantity });
+  const { checkStock } = require('../index');
+  const result = checkStock(req.body);
+  res.json(result);
 });
 
 describe("Stock Alert API", () => {
@@ -52,25 +12,56 @@ describe("Stock Alert API", () => {
   test("stock = 0 => CRITIQUE", async () => {
     const res = await request(app)
       .post('/api/stock-alert')
-      .send({ stock: 0, threshold: 10 });
+      .send({ stock: 0, threshold: 10, isLocal: true });
 
     expect(res.body.status).toBe("CRITIQUE");
+    expect(res.body.orderQuantity).toBe(50);
   });
 
-  test("stock faible => À COMMANDER", async () => {
+  test("stock faible => À COMMANDER (local)", async () => {
     const res = await request(app)
       .post('/api/stock-alert')
-      .send({ stock: 5, threshold: 10, isLocal: true });
+      .send({
+        stock: 5,
+        threshold: 10,
+        isLocal: true,
+        period: "Normal",
+        isPerishable: false
+      });
 
     expect(res.body.status).toBe("À COMMANDER");
+    expect(res.body.delay).toBe(2);
+    expect(res.body.orderQuantity).toBe(10);
   });
 
-  test("Noel augmente quantité", async () => {
+  test("stock faible => À COMMANDER (non local)", async () => {
     const res = await request(app)
       .post('/api/stock-alert')
-      .send({ stock: 5, threshold: 10, period: "Noel", isLocal: true });
+      .send({
+        stock: 5,
+        threshold: 10,
+        isLocal: false,
+        period: "Normal",
+        isPerishable: false
+      });
 
-    expect(res.body.orderQuantity).toBeGreaterThan(0);
+    expect(res.body.status).toBe("À COMMANDER");
+    expect(res.body.delay).toBe(15);
+    expect(res.body.orderQuantity).toBe(5);
+  });
+
+  test("Noel augmente la quantité de 30%", async () => {
+    const res = await request(app)
+      .post('/api/stock-alert')
+      .send({
+        stock: 5,
+        threshold: 10,
+        isLocal: true,
+        period: "Noel",
+        isPerishable: false
+      });
+
+    expect(res.body.orderQuantity).toBeGreaterThan(10);
   });
 
 });

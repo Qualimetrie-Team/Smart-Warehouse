@@ -2,42 +2,57 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-// Fonction unique avec complexité maximale 
+/* ================= LOGIQUE MÉTIER ================= */
+
+function getAlertThreshold(threshold, isPerishable) {
+    return isPerishable ? threshold * 2 : threshold;
+}
+
+function getDeliveryDelay(isLocal) {
+    return isLocal ? 2 : 15;
+}
+
+function getOrderQuantity(isLocal, period) {
+    let quantity = isLocal ? 10 : 5;
+    if (period === "Noel") quantity *= 1.3;
+    return quantity;
+}
+
+function checkStock(data) {
+    const { stock, threshold, isPerishable, isLocal, period } = data;
+
+    const finalThreshold = getAlertThreshold(threshold, isPerishable);
+
+    if (stock === 0) {
+        return {
+            status: "CRITIQUE",
+            delay: getDeliveryDelay(isLocal),
+            orderQuantity: 50
+        };
+    }
+
+    if (stock <= finalThreshold) {
+        return {
+            status: "À COMMANDER",
+            delay: getDeliveryDelay(isLocal),
+            orderQuantity: getOrderQuantity(isLocal, period)
+        };
+    }
+
+    return {
+        status: "OK",
+        delay: getDeliveryDelay(isLocal),
+        orderQuantity: 0
+    };
+}
+
+/* ================= ROUTE API ================= */
+
 app.post('/api/stock-alert', (req, res) => {
-    const { stock, isPerishable, isLocal, period, threshold } = req.body;
-    let status = "OK";
-    let delay = 15;
-    let orderQuantity = 0;
-    let finalthreshold = isPerishable ? threshold * 2 : threshold;
-
-
-    // Logique de gestion de stock très imbriquée
-    if(stock == 0) {
-        status = "CRITIQUE";
-        orderQuantity = 50;
-    }
-    else if (stock <= finalthreshold) {
-        status = "À COMMANDER";
-            if (isLocal) {
-                    delay = 2;
-                    orderQuantity = 10;
-                } else {
-                    delay = 15;
-                    orderQuantity = 5;
-                }
-    }
-    else {          
-        status = "OK";
-        orderQuantity = 0;
-    }
-
-    
-    // Gestion de la période de Noël
-    if (period === "Noel") {
-        orderQuantity = orderQuantity * 1.30;
-    }
-
-    res.json({ status, delay, orderQuantity });
+    res.json(checkStock(req.body));
 });
 
-app.listen(3000, () => console.log('Serveur SmartWarehouse en ligne'));
+/* ================= EXPORT IMPORTANT ================= */
+
+module.exports = app;
+module.exports = { app, checkStock };
