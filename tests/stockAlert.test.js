@@ -63,5 +63,32 @@ describe("Stock Alert API", () => {
 
     expect(res.body.orderQuantity).toBeGreaterThan(10);
   });
+  test("stock suffisant => OK", async () => {
+    const res = await request(app)
+      .post('/api/stock-alert')
+      .send({
+        stock: 50,
+        threshold: 10,
+        isLocal: true,
+        period: "Normal",
+        isPerishable: false
+      });
 
+    expect(res.body.status).toBe("OK");
+    expect(res.body.delay).toBe(2);
+    expect(res.body.orderQuantity).toBe(0);
+  });
+
+  test("produit périssable => seuil doublé", async () => {
+    const res = await request(app)
+      .post('/api/stock-alert')
+      .send({
+        stock: 15,
+        threshold: 10,
+        isPerishable: true,
+        isLocal: true
+      });
+
+    expect(res.body.status).toBe("À COMMANDER");
+  });
 });
